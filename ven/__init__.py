@@ -6,6 +6,24 @@ from importlib import import_module
 from inspect import getabsfile,getmodule
 from setting import settings
 
+import os
+from ZODB import FileStorage, DB
+
+class ForumZODB(object):
+    def __init__(self, path):
+        self.storage = FileStorage.FileStorage(path)
+        self.db = DB(self.storage)
+        self.connection = self.db.open()
+        self.dbroot = self.connection.root()
+
+    def close(self):
+        self.connection.close()
+        self.db.close()
+        self.storage.close()
+
+data_file = os.path.join(base_path,'data','forum.fs')
+db = ForumZODB(data_file)
+
 class RouterConfig:
     def __init__(self):
         self.Application = tornado.web.Application(**settings)  # 创建路由对象
