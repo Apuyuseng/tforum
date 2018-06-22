@@ -24,6 +24,11 @@ class ForumZODB(object):
 data_file = os.path.join(base_path,'data','forum.fs')
 db = ForumZODB(data_file)
 
+class BaseHandler(tornado.web.RequestHandler):
+    def get_current_user(self):
+        return self.get_secure_cookie("mail")
+
+
 class RouterConfig:
     def __init__(self):
         self.Application = tornado.web.Application(**settings)  # 创建路由对象
